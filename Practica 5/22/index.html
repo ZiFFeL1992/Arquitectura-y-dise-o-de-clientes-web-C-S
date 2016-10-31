@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Creación de página con elementos multimedia</title>
+    <style type="text/css" media="screen">
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        content {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+        }
+
+        content > div {
+            width: 450px;
+            margin: 10px;
+            flex: 1;
+            text-align: center;
+        }
+
+        video, audio {
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <content>
+        <div>
+            <h3>Video</h3>
+            <video src="i-want-to-break-free.mp4" width="450" controls>
+                Tu navegador no implementa el elemento <code>video</code>.
+            </video>
+        </div>
+        <div>
+            <h3>Audio</h3>
+            <audio src="we-will-rock-you.mp3" controls>
+                <p>Tu navegador no implementa el elemento audio.</p>
+            </audio>
+        </div>
+        <div>
+            <h3>Invalid Audio</h3>
+            <audio src="audio.mp3" controls autoplay loop>
+                <p>Tu navegador no implementa el elemento audio</p>
+            </audio>
+        </div>
+    </content>
+</body>
+</html>

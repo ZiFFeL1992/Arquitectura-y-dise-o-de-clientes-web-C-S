@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SQLite</title>
+    <style type="text/css" media="screen">
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        content {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <content>
+        <div>
+            <h3>Introduce un nombre de usuario y pulsa <strong>"enter"</strong></h3>
+            <input type="text" placeholder="Introduce un nombre de usuario">
+        </div>
+        <div>
+            <h3>List of users</h3>
+            <div class="users"></div>
+        </div>
+    </content>
+</body>
+
+<script src="jquery.js"></script>
+<script type="text/javascript">
+    $(function() {
+        createDB();
+        selectAll();
+    });
+
+    var db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+
+    function createDB() {
+        db.transaction((tx) => {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (username TEXT)');
+        });
+    }
+
+    function insertRow(username) {
+        db.transaction((tx) => {
+            tx.executeSql('INSERT INTO USERS (username) VALUES (?)', [username],
+                onSuccess => console.log('user "' + username + '" added to db.'),
+                onError => console.error()
+            )
+        });
+    }
+
+    function selectAll() {
+        db.transaction((tx) => {
+            tx.executeSql('SELECT * FROM USERS', [], (tx, results) => {
+                if (results.rows.length) { // We do have any result
+                    var myHTML = '';
+                    for (var i = 0; i < results.rows.length; i++) {
+                        myHTML += results.rows.item(i).username + '<br>';
+                    }
+
+                    $('.users').html(myHTML);
+                }
+            }, null);
+        });
+    }
+
+    $('input[type=text]').on('keydown', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            insertRow($(this).val());
+            $(this).val(''); // Clear input
+            selectAll();
+        }
+    });
+</script>
+</html>
